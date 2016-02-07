@@ -221,8 +221,7 @@ static bool dpll(const struct il_problem *p,
                  bool (*callback)(const struct il_solution *, void *),
                  void *thunk) {
   return !propagate(p, options) ||
-         (finished(options) ? report(p, options, callback, thunk)
-                            : guess(p, options, callback, thunk));
+         (finished(options) ? report : guess)(p, options, callback, thunk);
 }
 
 void il_solve(const struct il_problem *p,
