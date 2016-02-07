@@ -1,3 +1,8 @@
+// Copyright (c) 2016 Ed Schouten <ed@nuxi.nl>
+//
+// This file is distributed under a 2-clause BSD license.
+// See the LICENSE file for details.
+
 #include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
