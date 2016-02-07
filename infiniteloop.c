@@ -186,7 +186,7 @@ static bool report(const struct il_problem *p,
 // reinvokes the DPLL algorithm by placing that cell in all allowed
 // directions.
 static bool guess(const struct il_problem *p,
-                  unsigned char options[IL_AXIS][IL_AXIS],
+                  const unsigned char options[IL_AXIS][IL_AXIS],
                   bool (*callback)(const struct il_solution *, void *),
                   void *thunk) {
   // Pick a random cell with multiple solutions.
