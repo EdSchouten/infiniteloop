@@ -38,9 +38,7 @@ static void do_test(const char *problem, const char *const *solutions,
     found[i] = false;
 
   struct callback_param param = {
-      .solutions = solutions,
-      .found = found,
-      .nsolutions = nsolutions,
+      .solutions = solutions, .found = found, .nsolutions = nsolutions,
   };
   il_solve(&p, solve_callback, &param);
 
@@ -48,10 +46,11 @@ static void do_test(const char *problem, const char *const *solutions,
     ASSERT_TRUE(found[i]);
 }
 
-#define EXAMPLE(problem, ...) do {                                       \
-  const char *const solutions[] = { __VA_ARGS__ };                       \
-  do_test(problem, solutions, sizeof(solutions) / sizeof(solutions[0])); \
-} while (0)
+#define EXAMPLE(problem, ...)                                              \
+  do {                                                                     \
+    const char *const solutions[] = {__VA_ARGS__};                         \
+    do_test(problem, solutions, sizeof(solutions) / sizeof(solutions[0])); \
+  } while (0)
 
 TEST(il_solve, examples) {
   // Empty puzzles.
@@ -62,67 +61,70 @@ TEST(il_solve, examples) {
   EXAMPLE("1SSSSS");
 
   // Puzzle with multiple answers.
-  EXAMPLE("1CC1\n"
-          "1CC1",
-          "╶─╮ ╭─╴\n"
-          "  │ │\n"
-          "╶─╯ ╰─╴",
-          "╷ ╭─╮ ╷\n"
-          "│ │ │ │\n"
-          "╵ ╰─╯ ╵");
+  EXAMPLE(
+      "1CC1\n"
+      "1CC1",
+      "╶─╮ ╭─╴\n"
+      "  │ │\n"
+      "╶─╯ ╰─╴",
+      "╷ ╭─╮ ╷\n"
+      "│ │ │ │\n"
+      "╵ ╰─╯ ╵");
 
-  EXAMPLE("11  11\n"
-          "CC11CC\n"
-          "C4SS4C\n"
-          " 1  1\n"
-          "C3333C\n"
-          "11CC11",
-          "╶─╴     ╶─╴\n"
-          "\n"
-          "╭─╮ ╶─╴ ╭─╮\n"
-          "│ │     │ │\n"
-          "╰─┼─────┼─╯\n"
-          "  │     │\n"
-          "  ╵     ╵\n"
-          "\n"
-          "╭─┬─┬─┬─┬─╮\n"
-          "│ │ │ │ │ │\n"
-          "╵ ╵ ╰─╯ ╵ ╵");
+  EXAMPLE(
+      "11  11\n"
+      "CC11CC\n"
+      "C4SS4C\n"
+      " 1  1\n"
+      "C3333C\n"
+      "11CC11",
+      "╶─╴     ╶─╴\n"
+      "\n"
+      "╭─╮ ╶─╴ ╭─╮\n"
+      "│ │     │ │\n"
+      "╰─┼─────┼─╯\n"
+      "  │     │\n"
+      "  ╵     ╵\n"
+      "\n"
+      "╭─┬─┬─┬─┬─╮\n"
+      "│ │ │ │ │ │\n"
+      "╵ ╵ ╰─╯ ╵ ╵");
 
   // Puzzle #166.
-  EXAMPLE("1C1C11\n"
-          " CCC11\n"
-          "CC  C1\n"
-          "S331S1\n"
-          "CCSCCS\n"
-          "C11S1S\n"
-          "S 133S\n"
-          "S SSC3\n"
-          "3C331S\n"
-          "CC11CS\n"
-          " CC143\n"
-          " CC1C1\n",
-          "╶─╮ ╷ ╭─╴ ╷\n"
-          "  │ │ │   │\n"
-          "  ╰─╯ ╰─╴ ╵\n"
-          "\n"
-          "╭─╮     ╭─╴\n"
-          "│ │     │\n"
-          "│ ├─┬─╴ │ ╷\n"
-          "│ │ │   │ │\n"
-          "╰─╯ │ ╭─╯ │\n"
-          "    │ │   │\n"
-          "╭─╴ ╵ │ ╷ │\n"
-          "│     │ │ │\n"
-          "│   ╷ ├─┤ │\n"
-          "│   │ │ │ │\n"
-          "│   │ │ ╰─┤\n"
-          "│   │ │   │\n"
-          "├─╮ ├─┴─╴ │\n"
-          "│ │ │     │\n"
-          "╰─╯ ╵ ╶─╮ │\n"
-          "        │ │\n"
-          "  ╭─╮ ╶─┼─┤\n"
-          "  │ │   │ │\n"
-          "  ╰─╯ ╶─╯ ╵");
+  EXAMPLE(
+      "1C1C11\n"
+      " CCC11\n"
+      "CC  C1\n"
+      "S331S1\n"
+      "CCSCCS\n"
+      "C11S1S\n"
+      "S 133S\n"
+      "S SSC3\n"
+      "3C331S\n"
+      "CC11CS\n"
+      " CC143\n"
+      " CC1C1\n",
+      "╶─╮ ╷ ╭─╴ ╷\n"
+      "  │ │ │   │\n"
+      "  ╰─╯ ╰─╴ ╵\n"
+      "\n"
+      "╭─╮     ╭─╴\n"
+      "│ │     │\n"
+      "│ ├─┬─╴ │ ╷\n"
+      "│ │ │   │ │\n"
+      "╰─╯ │ ╭─╯ │\n"
+      "    │ │   │\n"
+      "╭─╴ ╵ │ ╷ │\n"
+      "│     │ │ │\n"
+      "│   ╷ ├─┤ │\n"
+      "│   │ │ │ │\n"
+      "│   │ │ ╰─┤\n"
+      "│   │ │   │\n"
+      "├─╮ ├─┴─╴ │\n"
+      "│ │ │     │\n"
+      "╰─╯ ╵ ╶─╮ │\n"
+      "        │ │\n"
+      "  ╭─╮ ╶─┼─┤\n"
+      "  │ │   │ │\n"
+      "  ╰─╯ ╶─╯ ╵");
 }

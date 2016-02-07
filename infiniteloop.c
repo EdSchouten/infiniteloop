@@ -10,7 +10,8 @@ static bool dpll(const struct il_problem *, unsigned char[IL_AXIS][IL_AXIS],
 bool il_problem_parse(const char *in, struct il_problem *p) {
   // Throw away the existing board.
   for (size_t x = 0; x < IL_AXIS; ++x)
-    for (size_t y = 0; y < IL_AXIS; ++y) p->board[x][y] = 0;
+    for (size_t y = 0; y < IL_AXIS; ++y)
+      p->board[x][y] = 0;
 
   // Parse the input string.
   size_t x = 1, y = 1;
@@ -31,27 +32,32 @@ bool il_problem_parse(const char *in, struct il_problem *p) {
       // Cell shapes.
       case '1':
         // A dead end.
-        if (x >= IL_AXIS - 1 || y >= IL_AXIS - 1) return false;
+        if (x >= IL_AXIS - 1 || y >= IL_AXIS - 1)
+          return false;
         p->board[x++][y] = 0x1;
         break;
       case 'C':
         // A corner.
-        if (x >= IL_AXIS - 1 || y >= IL_AXIS - 1) return false;
+        if (x >= IL_AXIS - 1 || y >= IL_AXIS - 1)
+          return false;
         p->board[x++][y] = 0x3;
         break;
       case 'S':
         // A straight line.
-        if (x >= IL_AXIS - 1 || y >= IL_AXIS - 1) return false;
+        if (x >= IL_AXIS - 1 || y >= IL_AXIS - 1)
+          return false;
         p->board[x++][y] = 0x5;
         break;
       case '3':
         // A three-way junction.
-        if (x >= IL_AXIS - 1 || y >= IL_AXIS - 1) return false;
+        if (x >= IL_AXIS - 1 || y >= IL_AXIS - 1)
+          return false;
         p->board[x++][y] = 0x7;
         break;
       case '4':
         // A crossing.
-        if (x >= IL_AXIS - 1 || y >= IL_AXIS - 1) return false;
+        if (x >= IL_AXIS - 1 || y >= IL_AXIS - 1)
+          return false;
         p->board[x++][y] = 0xf;
         break;
     }
@@ -83,14 +89,17 @@ static unsigned char fanout(unsigned char a, unsigned char b) {
 }
 
 // Returns true if the cell only has a single edge set.
-static bool single_bit_set(unsigned char c) { return (c & (c - 1)) == 0; }
+static bool single_bit_set(unsigned char c) {
+  return (c & (c - 1)) == 0;
+}
 
 // Returns true if a solution has been fully computed. This means that
 // every cell can only be placed in exactly one way.
 static bool finished(const unsigned char options[IL_AXIS][IL_AXIS]) {
   for (size_t x = 1; x < IL_AXIS - 1; ++x)
     for (size_t y = 1; y < IL_AXIS - 1; ++y)
-      if (!single_bit_set(options[x][y])) return false;
+      if (!single_bit_set(options[x][y]))
+        return false;
   return true;
 }
 
@@ -113,16 +122,16 @@ static bool propagate(const struct il_problem *p,
 #define YES(x, y, idx) (fanout(p->board[x][y], options[x][y]) & (1 << idx))
         // Determine which edges may be present.
         unsigned char may_be_set = rotate2(YES(x, y + 1, 0) | YES(x - 1, y, 1) |
-                                        YES(x, y - 1, 2) | YES(x + 1, y, 3));
+                                           YES(x, y - 1, 2) | YES(x + 1, y, 3));
 #undef YES
 #define NO(x, y, idx) (fanout(p->board[x][y] ^ 0xf, options[x][y]) & (1 << idx))
-	// Determine which edges may be absent.
+        // Determine which edges may be absent.
         unsigned char may_be_clear = rotate2(NO(x, y + 1, 0) | NO(x - 1, y, 1) |
-                                          NO(x, y - 1, 2) | NO(x + 1, y, 3));
+                                             NO(x, y - 1, 2) | NO(x + 1, y, 3));
 #undef NO
 
         // Compute ways in which this cell may be placed by using the
-	// bitmasks obtained above.
+        // bitmasks obtained above.
         unsigned char new_options = 0;
         for (unsigned char i = 0x1; i <= 0x8; i <<= 1) {
           if ((options[x][y] & i) != 0) {
@@ -133,8 +142,9 @@ static bool propagate(const struct il_problem *p,
         }
 
         if (new_options != options[x][y]) {
-	  // Fail if the cell cannot be placed in any direction.
-          if (new_options == 0) return false;
+          // Fail if the cell cannot be placed in any direction.
+          if (new_options == 0)
+            return false;
           made_change = true;
         }
         options[x][y] = new_options;
@@ -156,7 +166,8 @@ static bool report(const struct il_problem *p,
           rotate(p->board[x + 1][y + 1], options[x + 1][y + 1]) & 0x2;
   for (size_t x = 0; x < IL_AXIS - 2; ++x)
     for (size_t y = 0; y < IL_AXIS - 3; ++y)
-      s.vertical[x][y] = rotate(p->board[x + 1][y + 1], options[x + 1][y + 1]) & 0x4;
+      s.vertical[x][y] =
+          rotate(p->board[x + 1][y + 1], options[x + 1][y + 1]) & 0x4;
 
   // Invoke the user-supplied callback.
   return callback(&s, thunk);
@@ -187,7 +198,8 @@ static bool guess(const struct il_problem *p,
       unsigned char new_options[IL_AXIS][IL_AXIS];
       memcpy(new_options, options, sizeof(new_options));
       new_options[x][y] = i;
-      if (!dpll(p, new_options, callback, thunk)) return false;
+      if (!dpll(p, new_options, callback, thunk))
+        return false;
     }
   }
   return true;
@@ -240,7 +252,8 @@ static bool putstr(char **out, size_t *outlen, const char *in) {
 
 // Writes whitespace to the output buffer until a given position has
 // been reached.
-static bool whitespace(char **out, size_t *outlen, size_t x, size_t y, size_t *posx, size_t *posy) {
+static bool whitespace(char **out, size_t *outlen, size_t x, size_t y,
+                       size_t *posx, size_t *posy) {
   while (y > *posy) {
     if (!putstr(out, outlen, "\n"))
       return false;
@@ -266,21 +279,21 @@ bool il_solution_print(const struct il_solution *s, char *out, size_t outlen) {
     // Print lines containing cells.
     for (size_t x = 0; x < IL_AXIS - 2; ++x) {
       // Determine which outgoing edges a cell has.
-      unsigned char idx =
-          (y > 0 && s->vertical[x][y - 1] ? 0x1 : 0) |
-          (x < IL_AXIS - 3 && s->horizontal[x][y] ? 0x2 : 0) |
-          (y < IL_AXIS - 3 && s->vertical[x][y] ? 0x4 : 0) |
-          (x > 0 && s->horizontal[x - 1][y] ? 0x8 : 0);
+      unsigned char idx = (y > 0 && s->vertical[x][y - 1] ? 0x1 : 0) |
+                          (x < IL_AXIS - 3 && s->horizontal[x][y] ? 0x2 : 0) |
+                          (y < IL_AXIS - 3 && s->vertical[x][y] ? 0x4 : 0) |
+                          (x > 0 && s->horizontal[x - 1][y] ? 0x8 : 0);
       if (idx != 0) {
         // Print cell.
-        const char cells[16][4] = {"", "╵", "╶", "╰", "╷", "│", "╭", "├", "╴", "╯", "─", "┴", "╮", "┤", "┬", "┼"};
+        const char cells[16][4] = {"",  "╵", "╶", "╰", "╷", "│", "╭", "├",
+                                   "╴", "╯", "─", "┴", "╮", "┤", "┬", "┼"};
         if (!whitespace(&out, &outlen, 2 * x, 2 * y, &posx, &posy))
           return false;
         if (!putstr(&out, &outlen, cells[idx]))
           return false;
         ++posx;
 
-	// Print horizontal edges.
+        // Print horizontal edges.
         if (x < IL_AXIS - 3 && s->horizontal[x][y]) {
           if (!putstr(&out, &outlen, "─"))
             return false;
