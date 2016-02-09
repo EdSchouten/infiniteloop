@@ -239,7 +239,7 @@ void il_solve(const struct il_problem *p,
       options[x][y] =
           (p->board[x][y] == 0 || p->board[x][y] == 0xf)
               ? 0x1
-              : p->board[x][y] >> 2 == (p->board[x][y] & 0x3) ? 0x3 : 0x0f;
+              : p->board[x][y] >> 2 == (p->board[x][y] & 0x3) ? 0x3 : 0xf;
 
   // Invoke the DPLL algorithm to compute solutions.
   dpll(p, options, callback, thunk);
