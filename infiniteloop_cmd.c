@@ -12,7 +12,7 @@
 static unsigned int solutions_found = 0;
 
 static bool print_solution(const struct il_solution *s, void *thunk) {
-  char buf[1024];
+  char buf[IL_SOLUTION_PRINT_MAX];
   if (!il_solution_print(s, buf, sizeof(buf))) {
     fprintf(stderr, "Failed to print solution\n");
     exit(1);
