@@ -42,12 +42,14 @@ bool il_problem_parse(const char *in, struct il_problem *p) {
         p->board[x++][y] = 0x1;
         break;
       case 'C':
+      case 'c':
         // A corner.
         if (x >= IL_AXIS - 1 || y >= IL_AXIS - 1)
           return false;
         p->board[x++][y] = 0x3;
         break;
       case 'S':
+      case 's':
         // A straight line.
         if (x >= IL_AXIS - 1 || y >= IL_AXIS - 1)
           return false;
@@ -291,7 +293,7 @@ bool il_solution_print(const struct il_solution *s, char *out, size_t outlen) {
         // Print cell.
         const char cells[16][4] = {"",  "╵", "╶", "╰", "╷", "│", "╭", "├",
                                    "╴", "╯", "─", "┴", "╮", "┤", "┬", "┼"};
-        if (!whitespace(&out, &outlen, 2 * x, 2 * y, &posx, &posy))
+        if (!whitespace(&out, &outlen, 3 * x, 2 * y, &posx, &posy))
           return false;
         if (!putstr(&out, &outlen, cells[idx]))
           return false;
@@ -299,9 +301,9 @@ bool il_solution_print(const struct il_solution *s, char *out, size_t outlen) {
 
         // Print horizontal edges.
         if (x < IL_AXIS - 3 && s->horizontal[x][y]) {
-          if (!putstr(&out, &outlen, "─"))
+          if (!putstr(&out, &outlen, "──"))
             return false;
-          ++posx;
+          posx += 2;
         }
       }
     }
@@ -310,7 +312,7 @@ bool il_solution_print(const struct il_solution *s, char *out, size_t outlen) {
     if (y < IL_AXIS - 3) {
       for (size_t x = 0; x < IL_AXIS - 2; ++x) {
         if (s->vertical[x][y]) {
-          if (!whitespace(&out, &outlen, 2 * x, 2 * y + 1, &posx, &posy))
+          if (!whitespace(&out, &outlen, 3 * x, 2 * y + 1, &posx, &posy))
             return false;
           if (!putstr(&out, &outlen, "│"))
             return false;
