@@ -226,7 +226,7 @@ static bool dpll(const struct il_problem *p,
          (finished(options) ? report : guess)(p, options, callback, thunk);
 }
 
-void il_solve(const struct il_problem *p,
+void il_problem_solve(const struct il_problem *p,
               bool (*callback)(const struct il_solution *, void *),
               void *thunk) {
   // Table of valid options remaining for every cell. Initialize it by
@@ -322,4 +322,25 @@ bool il_solution_print(const struct il_solution *s, char *out, size_t outlen) {
     }
   }
   return true;
+}
+
+void il_solution_unsolve(const struct il_solution *s, struct il_problem *p) {
+  // Empty out the board.
+  memset(p, '\0', sizeof(*p));
+
+  // Turn horizontal connections into outgoing edges on the board.
+  for (size_t x = 0; x < IL_AXIS - 3; ++x)
+    for (size_t y = 0; y < IL_AXIS - 2; ++y)
+      if (s->horizontal[x][y]) {
+        p->board[x + 1][y + 1] |= 0x2;
+        p->board[x + 2][y + 1] |= 0x8;
+      }
+
+  // Turn vertical connections into outgoing edges on the board.
+  for (size_t x = 0; x < IL_AXIS - 2; ++x)
+    for (size_t y = 0; y < IL_AXIS - 3; ++y)
+      if (s->vertical[x][y]) {
+        p->board[x + 1][y + 1] |= 0x1;
+        p->board[x + 1][y + 2] |= 0x4;
+      }
 }

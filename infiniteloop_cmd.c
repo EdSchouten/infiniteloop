@@ -33,7 +33,7 @@ int main(void) {
     return 1;
   }
 
-  il_solve(&p, print_solution, NULL);
+  il_problem_solve(&p, print_solution, NULL);
 
   printf("-- FOUND %u SOLUTIONS --\n", solutions_found);
   return 0;

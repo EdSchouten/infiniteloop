@@ -38,13 +38,17 @@ struct il_solution {
 // Parses a string encoding the layout of a puzzle input.
 bool il_problem_parse(const char *, struct il_problem *);
 
-// Generates a string encoding the layout of a puzzle output.
-bool il_solution_print(const struct il_solution *, char *, size_t);
-
 // Generates all solutions for a puzzle. The callback is invoked for
 // every solution. Additional solutions are computed if the callback
 // returns true.
-void il_solve(const struct il_problem *,
-              bool (*)(const struct il_solution *, void *), void *);
+void il_problem_solve(const struct il_problem *,
+                      bool (*)(const struct il_solution *, void *), void *);
+
+// Generates a string encoding the layout of a puzzle output.
+bool il_solution_print(const struct il_solution *, char *, size_t);
+
+// Converts a solution to a puzzle back to a problem, so that it can be
+// solved again.
+void il_solution_unsolve(const struct il_solution *, struct il_problem *);
 
 #endif
