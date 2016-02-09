@@ -9,6 +9,8 @@
 
 #include "infiniteloop.h"
 
+static unsigned int solutions_found = 0;
+
 static bool print_solution(const struct il_solution *s, void *thunk) {
   char buf[1024];
   if (!il_solution_print(s, buf, sizeof(buf))) {
@@ -16,6 +18,7 @@ static bool print_solution(const struct il_solution *s, void *thunk) {
     exit(1);
   }
   printf("-- SOLUTION --\n%s\n", buf);
+  ++solutions_found;
   return true;
 }
 
@@ -31,5 +34,7 @@ int main(void) {
   }
 
   il_solve(&p, print_solution, NULL);
+
+  printf("-- FOUND %u SOLUTIONS --\n", solutions_found);
   return 0;
 }
