@@ -19,7 +19,7 @@ struct solve_param {
 };
 
 static bool solve_callback(const struct il_solution *s, void *thunk) {
-  char buf[1024];
+  char buf[IL_SOLUTION_PRINT_MAX];
   ASSERT_TRUE(il_solution_print(s, buf, sizeof(buf)));
 
   const struct solve_param *param = thunk;
@@ -59,7 +59,7 @@ static void do_test(const char *problem, const char *const *solutions,
   } while (0)
 
 struct resolve_param {
-  char expected[IL_AXIS * IL_AXIS * 9];
+  char expected[IL_SOLUTION_PRINT_MAX];
   bool found;
 };
 

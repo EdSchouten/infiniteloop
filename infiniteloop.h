@@ -12,6 +12,9 @@
 // Maximum board axis width.
 #define IL_AXIS 16
 
+// Longest string returned by il_solution_print().
+#define IL_SOLUTION_PRINT_MAX (IL_AXIS * IL_AXIS * 9)
+
 // Puzzle input structure.
 //
 // This structure stores the expected piece for every cell on the board.
